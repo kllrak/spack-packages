@@ -87,6 +87,10 @@ class Xictools(MakefilePackage):
     # never installed, and the wrapper script has no fallback for it.
     patch("wrspice-nogfx-install.patch", when="@4: ~qt")
 
+    # mmjco hardcodes g++ and MacPorts /opt/local paths; use the
+    # configured compiler and let the environment provide GSL.
+    patch("mmjco-cxx-gsl.patch", when="@4:")
+
     # Remove stray include that breaks building +qt~gpl
     patch("qtmain.cc.patch", when="@4:")
 
@@ -143,6 +147,13 @@ class Xictools(MakefilePackage):
         makefile.filter(r"^SUBDIRS\s*=.*", f"SUBDIRS = {' '.join(subdirs)}")
 
         make("config")
+
+    def setup_build_environment(self, env):
+        # mmjco's Makefile defaults GSL/INCLUDE to the MacPorts prefix;
+        # point them at the Spack-built gsl instead (they are ?=).
+        gsl = self.spec["gsl"].prefix
+        env.set("GSL", f"-L{gsl.lib}")
+        env.set("INCLUDE", f"-I{gsl.include}")
 
     def setup_run_environment(self, env):
         env.prepend_path("PATH", join_path(self.prefix, "xictools", "bin"))
