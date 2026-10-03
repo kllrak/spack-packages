@@ -77,6 +77,11 @@ class Xictools(MakefilePackage):
     # sysroot otherwise.
     patch("darwin-sdk-path.patch", when="@4: platform=darwin")
 
+    # IMdev::NewDraw is only defined under WIN32 or WITH_X11; the vtable
+    # emitted in hcimlib.o references it, so no-graphics builds fail to
+    # link without a stub.
+    patch("ginterf-imdev-newdraw-stub.patch", when="@4: ~qt")
+
     # Remove stray include that breaks building +qt~gpl
     patch("qtmain.cc.patch", when="@4:")
 
