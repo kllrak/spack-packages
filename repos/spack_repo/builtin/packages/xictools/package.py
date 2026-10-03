@@ -91,6 +91,10 @@ class Xictools(MakefilePackage):
     # configured compiler and let the environment provide GSL.
     patch("mmjco-cxx-gsl.patch", when="@4:")
 
+    # admsXml is K&R-era C; autoconf 2.7x configure appends -std=gnu23,
+    # which breaks prototype-less declarations.  Force gnu89.
+    patch("adms-c89.patch", when="@4:")
+
     # Remove stray include that breaks building +qt~gpl
     patch("qtmain.cc.patch", when="@4:")
 
