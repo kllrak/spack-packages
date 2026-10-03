@@ -82,6 +82,11 @@ class Xictools(MakefilePackage):
     # link without a stub.
     patch("ginterf-imdev-newdraw-stub.patch", when="@4: ~qt")
 
+    # install_bin only installs the wrspice binary from bin/GTK2, bin/QT5,
+    # or bin/QT6; in a no-graphics build the binary is bin/wrspice and is
+    # never installed, and the wrapper script has no fallback for it.
+    patch("wrspice-nogfx-install.patch", when="@4: ~qt")
+
     # Remove stray include that breaks building +qt~gpl
     patch("qtmain.cc.patch", when="@4:")
 
