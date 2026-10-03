@@ -72,6 +72,11 @@ class Xictools(MakefilePackage):
     # and https://github.com/wrcad/xictools/issues/28
     parallel = False
 
+    # Use xcrun to locate the macOS SDK instead of assuming a full Xcode
+    # install; machines with only Command Line Tools hardcode a nonexistent
+    # sysroot otherwise.
+    patch("darwin-sdk-path.patch", when="@4: platform=darwin")
+
     # Remove stray include that breaks building +qt~gpl
     patch("qtmain.cc.patch", when="@4:")
 
