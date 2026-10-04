@@ -95,6 +95,10 @@ class Xictools(MakefilePackage):
     # which breaks prototype-less declarations.  Force gnu89.
     patch("adms-c89.patch", when="@4:")
 
+    # mmjco's REPL passes fgets() output to get_av() unchecked; NULL at
+    # EOF segfaults.  Exit the loop instead.
+    patch("mmjco-eof-segv.patch", when="@4:")
+
     # Remove stray include that breaks building +qt~gpl
     patch("qtmain.cc.patch", when="@4:")
 
