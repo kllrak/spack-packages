@@ -99,6 +99,11 @@ class Xictools(MakefilePackage):
     # EOF segfaults.  Exit the loop instead.
     patch("mmjco-eof-segv.patch", when="@4:")
 
+    # Linux/aarch64 build fixes: __arm64__ is Apple-only (use
+    # __aarch64__ too), mcontext_t has no gregs on aarch64 glibc, and the
+    # Linux branch hardcoded ARCH="x86_64".
+    patch("linux-aarch64-build-fixes.patch", when="@4:")
+
     # Remove stray include that breaks building +qt~gpl
     patch("qtmain.cc.patch", when="@4:")
 
